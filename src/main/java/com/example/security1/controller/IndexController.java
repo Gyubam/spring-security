@@ -1,11 +1,20 @@
 package com.example.security1.controller;
 
+import com.example.security1.model.User;
+import com.example.security1.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.PostMapping;
 
+@RequiredArgsConstructor
 @Controller
 public class IndexController {
+
+    private final UserRepository userRepository;
+
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @GetMapping("/")
     public String index() {
@@ -34,21 +43,28 @@ public class IndexController {
 
     // 스프링시큐리티 해당주소를 낚아챔 - SecurityConfig 파일 생성 후 작동X
     @GetMapping("/loginForm")
-    public String login() {
+    public String loginForm() {
 
         return "loginForm";
     }
 
     @GetMapping("/joinForm")
-    public String join() {
+    public String joinForm() {
 
         return "joinForm";
     }
 
-    @GetMapping("/joinProc")
-    @ResponseBody
-    public String joinProc() {
+    @PostMapping("/join")
+    public String join(User user) {
 
-        return "회원가입 완료됨";
+        user.setRole("ROLE_USER");
+
+        String rawPassword = user.getPassword();
+        String encPassword = bCryptPasswordEncoder.encode(rawPassword);
+        user.setPassword(encPassword);
+
+        userRepository.save(user);
+        return "redirect:/loginForm";
     }
+
 }
