@@ -22,4 +22,7 @@ public class User {
     private String role; //ROLE_USER, ROLE_ADMIN
     @CreationTimestamp
     private Timestamp createDate;
+
+    private String provider;
+    private String provideId;
 }
