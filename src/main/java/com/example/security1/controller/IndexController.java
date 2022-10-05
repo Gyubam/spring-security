@@ -37,7 +37,7 @@ public class IndexController {
         return "세션 정보 확인하기";
     }
 
-    // 로그인한 사용자에 한해
+    // oauth 로그인한 사용자에 한해
     @GetMapping("/test/oauth/login")
     @ResponseBody
     public String testOAuthLogin(Authentication authentication,
@@ -58,9 +58,12 @@ public class IndexController {
         return "index";
     }
 
+    // OAuth 로그인, 일반 로그인 동시 처리
     @GetMapping("/user")
     @ResponseBody
     public String user(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        System.out.println("principalDetails = " + principalDetails.getUser());
 
         return "user";
     }

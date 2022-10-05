@@ -1,6 +1,8 @@
 package com.example.security1.model;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Entity;
@@ -11,6 +13,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class User {
 
     @Id
@@ -25,4 +28,18 @@ public class User {
 
     private String provider;
     private String provideId;
+
+    @Builder
+    public User(String username, String password,
+                String email, String role,
+                Timestamp createDate, String provider,
+                String provideId) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.createDate = createDate;
+        this.provider = provider;
+        this.provideId = provideId;
+    }
 }
