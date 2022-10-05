@@ -9,13 +9,17 @@ package com.example.security1.config.auth;
 // Security Session => Authentication => UserDetails
 
 import com.example.security1.model.User;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
-public class PrincipalDetails implements UserDetails {
+@Getter
+public class PrincipalDetails implements UserDetails, OAuth2User {
 
     private User user; //콤포지션
 
@@ -67,5 +71,15 @@ public class PrincipalDetails implements UserDetails {
         // ex) 사이트에서 1년동안 회원이 로그인을 안하면 휴먼 계정으로 설정정
         // 현재시간 - 로그인시간 > 1년 시 return false
        return true;
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return null;
+    }
+
+    @Override
+    public String getName() {
+        return null;
     }
 }
