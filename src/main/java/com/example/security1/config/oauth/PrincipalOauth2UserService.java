@@ -1,6 +1,9 @@
 package com.example.security1.config.oauth;
 
 import com.example.security1.config.auth.PrincipalDetails;
+import com.example.security1.config.oauth.provider.FacebookUserInfo;
+import com.example.security1.config.oauth.provider.GoogleUserInfo;
+import com.example.security1.config.oauth.provider.OAuth2UserInfo;
 import com.example.security1.model.User;
 import com.example.security1.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -35,10 +38,24 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
         System.out.println("getAttributes() = " + oAuth2User.getAttributes());
 
-        String provider = userRequest.getClientRegistration().getClientId(); // google
-        String provideId = oAuth2User.getAttribute("sub");
+        // 회원가입 진행
+        OAuth2UserInfo oAuth2UserInfo = null;
+        if (userRequest.getClientRegistration().getRegistrationId().equals("google")) {
+            System.out.println("구글 로그인 요청");
+            oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
+
+        }else if(userRequest.getClientRegistration().getRegistrationId().equals("facebook")){
+            System.out.println("페이스북 로그인 요청");
+            oAuth2UserInfo = new FacebookUserInfo(oAuth2User.getAttributes());
+
+        }else {
+            System.out.println("구글 페이스북만 지원");
+        }
+
+        String provider = oAuth2UserInfo.getProvider(); // google
+        String provideId = oAuth2UserInfo.getProviderId(); //
         String username = provider + "_" + provideId; // google_10128412491824
-        String email = oAuth2User.getAttribute("email");
+        String email = oAuth2UserInfo.getEmail();
         String password = bCryptPasswordEncoder.encode("겟인데어"); // 크게 의미없음, 패스워드는 필요 x
         String role = "ROLE_USER";
 
